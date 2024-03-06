@@ -104,6 +104,9 @@ html[data-w-dynpage] [data-w-cloak] {
 .w-code-block {
   margin: unset;
 }
+pre.w-code-block code {
+  all: inherit;
+}
 .w-webflow-badge,
 .w-webflow-badge * {
   position: static;
@@ -308,7 +311,18 @@ button,
 .w-form {
   margin: 0 0 15px;
 }
-
+.w-form-done {
+  display: none;
+  padding: 20px;
+  text-align: center;
+  background-color: #dddddd;
+}
+.w-form-fail {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ffdede;
+}
 label {
   display: block;
   margin-bottom: 5px;
