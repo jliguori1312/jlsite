@@ -1,0 +1,11 @@
+.form-done {
+    padding: 20px;
+    text-align: center;
+    background-color: #dddddd;
+  }
+  .form-fail {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ffdede;
+  }
+  

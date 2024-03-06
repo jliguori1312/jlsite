@@ -2,11 +2,7 @@ $(document).ready(function () {
 	//$("#resultText").hide();
 	
   $("form").submit(function (event) {
-    var formData = {
-      name: $("#Name-4").val(),
-      email: $("#Email-8").val(),
-      message: $("#field-4").val(),
-    };
+    var formData = $('#email-form-2').serialize();
 
     $.ajax({
       method: "POST",
@@ -28,3 +24,4 @@ $(document).ready(function () {
 
    // event.preventDefault();
 });
+
