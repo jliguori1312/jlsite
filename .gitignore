@@ -3,5 +3,4 @@ images/.DS_Store
 images/.DS_Store
 package-lock.json
 dist
-dist/assets
 node_modules
