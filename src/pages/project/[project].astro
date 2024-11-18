@@ -1,10 +1,11 @@
 ---
 const { title, metaDesc, slug, description, images } = Astro.props
+const domain = import.meta.env.TENANT_DOMAIN
+const endpoint = import.meta.env.ENDPOINT
 
 export async function getStaticPaths() {
-    const domain = import.meta.env.CF_PAGES_URL
     console.log(domain)
-    const res = await fetch('http://localhost:3000/api/projects?depth=1', {
+    const res = await fetch(`${endpoint}/projects?depth=1`, {
         method: 'GET',
         headers: {
             'X-Tenant-Domain': domain,
@@ -20,8 +21,8 @@ export async function getStaticPaths() {
         return {
             params: {project: project.slug},
             props: {
-                title: project.title,
-                metaDesc: project.metaDescription,
+                title: project.meta.title,
+                metaDesc: project.meta.description,
                 description: project.description_html,
                 images: project.media,
             }
