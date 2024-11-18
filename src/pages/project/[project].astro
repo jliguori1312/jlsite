@@ -1,10 +1,11 @@
 ---
 const { title, metaDesc, slug, description, images } = Astro.props
-const domain = import.meta.env.TENANT_DOMAIN
-const endpoint = import.meta.env.ENDPOINT
+
 
 export async function getStaticPaths() {
-    console.log(domain)
+  const domain = import.meta.env.TENANT_DOMAIN
+  const endpoint = import.meta.env.ENDPOINT
+    //console.log(domain)
     const res = await fetch(`${endpoint}/projects?depth=1`, {
         method: 'GET',
         headers: {
@@ -13,7 +14,6 @@ export async function getStaticPaths() {
         },
     })
     const projects = await res.json()
-     console.log(projects.docs[0].media)
 
 
     return projects.docs.map((project) => {
