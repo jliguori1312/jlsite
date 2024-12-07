@@ -134,7 +134,7 @@ const { handler: EmbedElement, id } = getEmbedType(embed)
         </div>
       </a>
       <h1 class="heading-7" style="text-align: center;">{pageHeading}</h1>
-      {EmbedElement && <div style="width:720px; margin:20px auto 40px auto"><EmbedElement id={id} posterQuality="high" /></div>}
+      {EmbedElement && <div style="max-width:720px; margin:20px auto 40px auto"><EmbedElement id={id} posterQuality="high" /></div>}
       
       <div class="rich-text-block w-richtext">
         
@@ -143,9 +143,24 @@ const { handler: EmbedElement, id } = getEmbedType(embed)
     </div>
     <div class="w-layout-blockcontainer proj-page-images w-container">
         {
-            images.map((img) =>(
-                <Image src={`${endpoint}${img.image.url}`} width="960" height="960" quality="max" alt={img.image.alt} class="still-image" />
-            ))
+          images.map((img) => {
+            const aspectRation = img.image.width / img.image.height
+            const maxWidth = 940
+
+            return (
+              <Image
+                src={`${endpoint}${img.image.url}`} 
+                quality="max" 
+                alt={img.image.alt} 
+                class="still-image" 
+                width={maxWidth}
+                height={Math.round(maxWidth / aspectRation)}
+                widths={[320, 480, 640, 940]}
+                sizes="(max-width: 940px) 100vw, 940px"
+                style="height: auto;"
+              />
+            )
+          })
         }
         </div>
   </section>
