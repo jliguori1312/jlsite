@@ -1,7 +1,8 @@
 ---
-const { title, metaDesc, slug, description, images, endpoint } = Astro.props
+import { YouTube, Vimeo, LinkPreview } from 'astro-embed'
+import { Image } from 'astro:assets'
 
-
+// generate static pages for each project, using data from the API
 export async function getStaticPaths() {
   const domain = import.meta.env.TENANT_DOMAIN
   const endpoint = import.meta.env.ENDPOINT
@@ -23,24 +24,58 @@ export async function getStaticPaths() {
         return {
             params: {project: project.slug},
             props: {
-                title: project.meta.title,
+                pageHeading: project.title,
+                metaTitle: project.meta.title,
                 metaDesc: project.meta.description,
                 description: project.description_html,
                 images: project.images,
                 endpoint,
+                embed: project.embed,
             }
         }
     })
 }
+
+// On each generated page, setup any needed dynamic content
+
+const { pageHeading, metaTitle, metaDesc, slug, description, images, endpoint, embed } = Astro.props
+
+// Get type (youtube, vimeo, or other link) of embed url and return the appropriate handler
+function getEmbedType(url) {
+  if (!url) return { handler: null, id: null }
+  
+  try {
+    const embedUrl = new URL(url)
+    const hostname = embedUrl.hostname
+
+    if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
+      const id = hostname.includes('youtu.be')
+        ? embedUrl.pathname.slice(1)
+        : embedUrl.searchParams.get('v')
+      return { handler: YouTube, id }
+    }
+    
+    if (hostname.includes('vimeo.com')) {
+      const id = embedUrl.pathname.split('/').pop()
+      return { handler: Vimeo, id }
+    }
+
+    return { handler: LinkPreview, id: url }
+  } catch (e) {
+    return { handler: null, id: null }
+  }
+}
+const { handler: EmbedElement, id } = getEmbedType(embed)
+
 ---
 
 <!DOCTYPE html><!--  Last Published: Sun Oct 13 2024 22:53:20 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="6606042d92592df6b68555ea" data-wf-site="653ec489228936f78f397dc0">
 <head>
   <meta charset="utf-8">
-  <title>{title} - Jeremy Liguori, Cinematographer</title>
+  <title>{metaTitle} - Jeremy Liguori, Cinematographer</title>
   <meta content={metaDesc} name="description">
-  <meta content={`${title} - Jeremy Liguori, Cinematographer`} property="og:title">
+  <meta content={`${metaTitle} - Jeremy Liguori, Cinematographer`} property="og:title">
   <meta content={metaDesc} property="og:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
@@ -98,15 +133,18 @@ export async function getStaticPaths() {
           </title></svg>
         </div>
       </a>
+      <h1 class="heading-7" style="text-align: center;">{pageHeading}</h1>
+      {EmbedElement && <div style="width:720px; margin:20px auto 40px auto"><EmbedElement id={id} posterQuality="high" /></div>}
+      
       <div class="rich-text-block w-richtext">
-        <h1 class="heading-7">{title}</h1>
+        
         <Fragment set:html={description}>
       </div>
     </div>
     <div class="w-layout-blockcontainer proj-page-images w-container">
         {
             images.map((img) =>(
-                <img src={`${endpoint}${img.image.url}`} loading="lazy" sizes="(max-width: 991px)" alt={img.image.alt} class="still-image" />
+                <Image src={`${endpoint}${img.image.url}`} width="960" height="960" quality="max" alt={img.image.alt} class="still-image" />
             ))
         }
         </div>
