@@ -98,8 +98,7 @@ const projects = await cmsRequest(`/api/projects/${stringifiedQuery}`);
 
           const formattedExcerpt = project.excerpt_html
           .replace(/<p>/g, '')
-          .replace(/<\/p>/g, '<br>')
-          .replace(/<br>$/, '')
+          .replace(/<\/p>/g, '')
 
           return (
             <a href={`/project/${project.slug}`} class="proj-link w-inline-block" >
