@@ -19,7 +19,7 @@ export async function getStaticPaths() {
                 metaTitle: project.meta.title,
                 metaDesc: project.meta.description,
                 description: project.description_html,
-                images: project.images,
+                images: project.visuals,
                 embed: project.embed,
             }
         }
@@ -135,14 +135,14 @@ const endpoint = import.meta.env.ENDPOINT
     <div class="w-layout-blockcontainer proj-page-images w-container">
         {
           images.map((img) => {
-            const aspectRation = img.image.width / img.image.height
+            const aspectRation = img.width / img.height
             const maxWidth = 940
 
             return (
               <Image
-                src={`${endpoint}${img.image.url}`} 
+                src={`${endpoint}${img.url}`} 
                 quality="max" 
-                alt={img.image.alt} 
+                alt={img.alt} 
                 class="still-image" 
                 width={maxWidth}
                 height={Math.round(maxWidth / aspectRation)}
