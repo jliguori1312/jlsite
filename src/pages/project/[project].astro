@@ -7,10 +7,18 @@ import { Image } from 'astro:assets'
 export async function getStaticPaths() {
   
     const query = `/api/projects`
-    const projects = await cmsRequest(query)
-    console.log(projects)
+    const response = await cmsRequest(query)
+    const projects = response.docs
+    //console.log(projects)
 
-    return projects.docs.map((project) => {
+    if (response.hasNextPage){
+      const nextPage = await cmsRequest(query, response.nextPage)
+      projects.push(...nextPage.docs)
+    }
+
+    console.log(projects)  
+    return projects.map((project) => {
+      //console.log(project.meta)
        
         return {
             params: {project: project.slug},
@@ -135,8 +143,21 @@ const endpoint = import.meta.env.ENDPOINT
     <div class="w-layout-blockcontainer proj-page-images w-container">
         {
           images.map((img) => {
+            console.log(img)
             const aspectRation = img.width / img.height
             const maxWidth = 940
+
+            if (img.mimeType.includes('video')) {
+              return (
+                <video
+                  src={`${endpoint}${img.url}`}
+                  controls
+                  muted
+                  class="still-image"
+                  style="height: auto;"
+                />
+              )
+            }
 
             return (
               <Image

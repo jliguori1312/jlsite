@@ -6,6 +6,7 @@ import { Image } from 'astro:assets'
 //qury the cms for project slugs and thumbnail images only
 
 const query = {
+  sort: 'order',
   where: {
     featured: {
       equals: true,
@@ -21,7 +22,7 @@ const query = {
 }
 
 const stringifiedQuery = stringify(query, { addQueryPrefix: true })
-console.log(stringifiedQuery)
+//console.log(stringifiedQuery)
 const projects = await cmsRequest(`/api/projects/${stringifiedQuery}`);
 
 ---
@@ -90,7 +91,7 @@ const projects = await cmsRequest(`/api/projects/${stringifiedQuery}`);
 
       {
         projects.docs.map((project) => {
-          console.log(project)
+          //console.log(project)
           const aspectRatio = project.thumbnails[0].thumb.width / project.thumbnails[0].thumb.height
           const maxWidth = 500
 
